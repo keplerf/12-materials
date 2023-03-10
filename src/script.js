@@ -10,6 +10,16 @@ const gui = new dat.GUI();
 const canvas = document.querySelector("canvas.webgl");
 const textureLoader = new THREE.TextureLoader();
 
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+const environmentMapTexture = cubeTextureLoader.load([
+  "/textures/environmentMaps/0/px.jpg",
+  "/textures/environmentMaps/0/nx.jpg",
+  "/textures/environmentMaps/0/py.jpg",
+  "/textures/environmentMaps/0/ny.jpg",
+  "/textures/environmentMaps/0/pz.jpg",
+  "/textures/environmentMaps/0/nz.jpg",
+]);
+
 const doorColorTexture = textureLoader.load("/textures/door/color.jpg");
 const doorAlphaTexture = textureLoader.load("/textures/door/alpha.jpg");
 const doorAmbientOcclusionTexture = textureLoader.load(
@@ -24,17 +34,17 @@ const gradientTexture = textureLoader.load("/textures/gradients/3.jpg");
 
 // const material = new THREE.MeshBasicMaterial({ map: doorColorTexture });
 const material = new THREE.MeshStandardMaterial();
-material.metalness = 0;
-material.roughness = 1;
-material.map = doorColorTexture;
-material.aoMap = doorAmbientOcclusionTexture;
-material.aoMapIntensity = 0.7;
-material.displacementMap = doorHeightTexture;
-material.displacementScale = 0.1;
-material.normalMap = doorNormalTexture;
-material.normalScale.set(0.5, 0.5);
-material.transparent = true;
-material.alphaMap = doorAlphaTexture;
+material.metalness = 0.78;
+material.roughness = 0.03;
+// material.map = doorColorTexture;
+// material.aoMap = doorAmbientOcclusionTexture;
+// material.aoMapIntensity = 0.7;
+// material.displacementMap = doorHeightTexture;
+// material.displacementScale = 0.1;
+// material.normalMap = doorNormalTexture;
+// material.normalScale.set(0.5, 0.5);
+// material.transparent = true;
+// material.alphaMap = doorAlphaTexture;
 
 gui.add(material, "metalness").min(0).max(1).step(0.0001);
 gui.add(material, "roughness").min(0).max(1).step(0.0001);
@@ -89,6 +99,9 @@ window.addEventListener("resize", () => {
 });
 
 // Lights
+
+material.envMap = environmentMapTexture;
+scene.background = environmentMapTexture;
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
